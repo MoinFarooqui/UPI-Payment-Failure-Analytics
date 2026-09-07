@@ -1,101 +1,85 @@
 # UPI Payment Failure Analytics & Anomaly Detection
 
-An end-to-end data analytics project that analyzes 250,000 UPI transactions to understand transaction behavior, investigate payment failures, detect anomalies, validate relationships statistically, and evaluate transaction failure prediction.
+An end-to-end data analytics project evaluating 250,000 UPI transactions to analyze transaction behaviors, investigate payment failures, detect statistical anomalies, test feature relationships, and evaluate predictive failure modeling.
+
+---
 
 ## Dashboard Preview
 
-![UPI Payment Failure Analytics Dashboard](images/Dashboard.png)
+An interactive Microsoft Excel dashboard leveraging PivotTables, PivotCharts, and cross-filtering Slicers to analyze volume by bank, hour, network type, and geographical distribution.
 
-## Overview
+---
 
-Digital payment systems generate large volumes of transactional data, making it important to monitor transaction performance and understand payment failures.
+## Executive Summary
 
-This project follows a complete analytics workflow, starting with raw transaction data and progressing through data quality assessment, exploratory analysis, statistical testing, anomaly detection, machine learning, SQL analysis, and an interactive Excel dashboard.
+Digital payment systems process massive transactional volumes daily, making real-time performance monitoring and failure detection crucial for operational efficiency. This project covers a complete end-to-end data analytics pipeline—transitioning from raw transactional data to data quality auditing, exploratory analysis, hypothesis testing, anomaly detection, machine learning, SQL queries, and an interactive executive Excel dashboard.
 
-The analysis focuses on transaction patterns across banks, transaction types, networks, states, and different hours of the day.
+| Metric | Value |
+| --- | --- |
+| **Total Transactions** | 250,000 |
+| **Successful Transactions** | 237,624 |
+| **Failed Transactions** | 12,376 |
+| **Baseline Failure Rate** | 4.95% |
+| **Chi-Square Test (Network vs. Status)** | Not Statistically Significant ($p > 0.05$) |
+| **Chi-Square Test (Type vs. Status)** | Not Statistically Significant ($p > 0.05$) |
+| **Logistic Regression ROC-AUC** | 0.50 (Random Guessing Baseline) |
 
-## Dataset
+---
 
-The dataset contains **250,000 UPI transactions** with **17 attributes**, including transaction amount, status, type, sender and receiver banks, network type, device type, location, transaction time, and fraud indicators.
+## Key Technical Insights
 
-The data quality assessment identified no missing values, duplicate rows, or duplicate transaction IDs.
+Chi-Square independence tests revealed no statistically significant association between network types (or transaction types) and transaction failures. This proves that visual variations in raw volume do not always indicate true underlying operational bias.
+
+A Logistic Regression model trained on high-level transaction metadata yielded a ROC-AUC score of 0.50, performing no better than random guessing. This highlights severe class imbalance issues and demonstrates that metadata alone is insufficient; operational telemetries such as gateway server load, latency, and response codes are necessary for actionable failure forecasting.
+
+Z-score analysis successfully flagged extreme transaction amounts and localized behavioral deviations for deeper fraud and failure investigation.
+
+---
 
 ## Analytical Workflow
 
 ```text
-Raw Data
-   ↓
-Data Quality Assessment
-   ↓
-Exploratory Data Analysis
-   ↓
-Statistical Hypothesis Testing
-   ↓
-Anomaly Detection
-   ↓
-Failure Prediction
-   ↓
-SQL Analysis
-   ↓
-Interactive Excel Dashboard
-Statistical Analysis
+  ┌──────────────────────┐
+  │  Raw Data Extraction │ (250,000 Records, 17 Features)
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │ Data Quality Audit   │ (Zero missing values, duplicates, or ID collisions)
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │  Exploratory Analysis│ (Bank, State, Hourly, & Network distribution)
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │ Statistical Testing  │ (Chi-Square Tests for feature independence)
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │  Anomaly Detection   │ (Z-Score calculation for outlier volume/amounts)
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │ Predictive Modeling  │ (Logistic Regression & ROC-AUC Evaluation)
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │   SQL & Dashboard    │ (MySQL aggregation & Interactive Excel Dashboard)
+  └──────────────────────┘
 
-Chi-Square tests were performed to investigate potential relationships between transaction characteristics and payment outcomes.
+```
 
-The analysis found insufficient statistical evidence to establish a significant association between network type and transaction status. Similarly, transaction type did not demonstrate a statistically significant association with transaction outcomes.
+---
 
-This stage demonstrates the importance of validating assumptions statistically rather than relying only on visual patterns.
+## Repository Structure
 
-Anomaly Detection
-
-Z-score analysis was used to identify unusual transaction patterns and potential deviations from normal transaction behavior.
-
-The analysis demonstrates how statistical methods can support the identification of unusual activity that may require further investigation.
-
-Transaction Failure Prediction
-
-A Logistic Regression model was developed to predict the probability of transaction failure.
-
-The dataset contained 237,624 successful transactions and 12,376 failed transactions, resulting in an overall failure rate of 4.95%.
-
-The model achieved a ROC-AUC score close to 0.50, indicating limited predictive capability with the available features. This highlights the challenges of class imbalance and demonstrates that high accuracy alone is not sufficient when evaluating machine learning models.
-
-The analysis suggests that additional operational features, such as gateway load, server response time, and system availability, would be required to build a more effective failure prediction model.
-
-SQL Analysis
-
-MySQL was used to perform business-focused analysis on the transaction dataset.
-
-The analysis includes transaction filtering, aggregations, bank-wise and state-wise analysis, transaction failure analysis, and grouped analysis using SQL concepts such as WHERE, GROUP BY, HAVING, COUNT, SUM, AVG, MAX, and MIN.
-
-Interactive Excel Dashboard
-
-The final stage of the project involved developing an interactive Microsoft Excel dashboard.
-
-The dashboard presents key transaction metrics and visualizes transaction volume by sender bank, hourly activity, transaction type, network type, and sender state.
-
-The dashboard also includes interactive slicers that allow users to filter the analysis dynamically.
-
-Key Results
-Metric	Result
-Total Transactions	250,000
-Successful Transactions	237,624
-Failed Transactions	12,376
-Failure Rate	4.95%
-Network vs Status Test	Not Statistically Significant
-Transaction Type vs Status Test	Not Statistically Significant
-Logistic Regression ROC-AUC	0.50
-Technology Stack
-
-Python: Pandas, NumPy, Matplotlib, Seaborn, SciPy, Scikit-learn
-
-Database: MySQL
-
-Visualization: Microsoft Excel, PivotTables, PivotCharts, Slicers
-
-Version Control: Git and GitHub
-
-Project Structure
+```text
 UPI-Payment-Failure-Analytics/
 │
 ├── data/
@@ -120,15 +104,26 @@ UPI-Payment-Failure-Analytics/
 ├── images/
 │   └── dashboard.png
 │
-├── report
 ├── requirements.txt
 └── README.md
 
-Conclusion
+```
 
-This project demonstrates an end-to-end data analytics workflow by combining data analysis, statistical reasoning, anomaly detection, machine learning, SQL, and interactive data visualization.
+---
 
-A key outcome of the project is recognizing the limitations of the available data. While the analysis successfully identified transaction patterns and produced an interactive dashboard, the failure prediction model showed that additional operational features would be necessary for reliable prediction.
+## Tech Stack
 
-Moin Farooqui
-Data Analytics | Python | SQL | Excel
+| Domain | Tools & Technologies |
+| --- | --- |
+| **Programming & Libraries** | Python (Pandas, NumPy, Matplotlib, Seaborn, SciPy, Scikit-learn) |
+| **Database & Querying** | MySQL |
+| **Business Intelligence** | Microsoft Excel (PivotTables, PivotCharts, Slicers) |
+| **Version Control** | Git, GitHub |
+
+---
+
+## Author & Connect
+
+**Moin Farooqui**
+
+*Data Analytics | Python | SQL | Data Visualization*
